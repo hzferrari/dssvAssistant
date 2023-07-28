@@ -1,0 +1,74 @@
+input:disabled + label {
+	/*禁用的指针*/
+	cursor: not-allowed;
+}
+.Radio input,
+.Checkbox input {
+	display: none;
+}
+.Radio label,
+.Checkbox label {
+	padding: 0 16px 0 0;
+	display: inline-block;
+	cursor: pointer;
+	position: relative;
+}
+.Radio label:before,
+.Checkbox label:before {
+	box-sizing: border-box;
+	content: "";
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	border: 1px solid #999;
+	margin: 0 5px;
+	vertical-align: middle;
+	display: inline-block;
+	transition: 0.1s;
+	vertical-align: bottom;
+}
+.Radio label:hover:before,
+.Checkbox label:hover:before {
+	border-color: #41a5dc;
+}
+.Radio input:disabled + label:before,
+.Checkbox input:disabled + label:before {
+	background-color: #ccc;
+	border-color: #999;
+	opacity: 0.5;
+}
+.Radio input:disabled + label,
+.Checkbox input:disabled + label {
+	opacity: 0.5;
+}
+.Radio input:checked + label:before {
+	border: 5px solid #41a5dc;
+}
+.Checkbox label:before {
+	background: url(../icons/ico_tick.svg) no-repeat center;
+	background-size: 0;
+	border-radius: 4px;
+	transition: 0.2s;
+}
+.Checkbox input:checked + label:before {
+	background-color: #41a5dc;
+	background-size: 16px;
+	border-color: #41a5dc;
+}
+.Checkbox.red input:checked + label:before {
+	background-color: rgb(217, 83, 79);
+	background-size: 16px;
+	border-color: rgb(217, 83, 79);
+}
+.Checkbox.red label:hover:before {
+	border-color: rgb(217, 83, 79);
+}
+.HoverLabel label {
+	display: block;
+	border-radius: 4px;
+	padding: 4px;
+	width: 100%;
+}
+.HoverLabel label:hover {
+	background-color: #eee;
+}
