@@ -38,7 +38,7 @@ body {
 input {
 	border: 1px solid;
 	padding: 3px 5px;
-	width: 50px;
+	/* width: 50px; */
 }
 .btn-txt {
 	cursor: pointer;
@@ -239,7 +239,7 @@ input {
 #overTimeContentList {
 	padding: 20px;
 	padding-bottom: 0;
-	max-height: 210px;
+	max-height: 190px;
 	overflow-y: auto;
 	user-select: none;
 }

@@ -78,10 +78,11 @@ function calculateTime(clockIn) {
  * @param {String} clockIn
  * @param {String} clockOut
  * @param {Boolean} isWeekend 是否周末
+ * @param {Boolean} isJiucanCountType 是否就餐计算减去30min
  * @returns {Array} overtimeList
  * @example clockOut = "17:30"
  */
-function calculateOvertimeList(clockIn, clockOut, isWeekend = false) {
+function calculateOvertimeList(clockIn, clockOut, isWeekend = false, isJiucanCountType = false) {
 	if (!clockIn || !clockOut) {
 		return;
 	}
@@ -145,6 +146,15 @@ function calculateOvertimeList(clockIn, clockOut, isWeekend = false) {
 		// 每次叠加15分钟
 		nextShowTime = addTime(nextShowTime, "00:15");
 		overtime += 0.25;
+	}
+
+	if (!isWeekend && isJiucanCountType) {
+		// 就餐计算减去30min
+		overtimeList.forEach((item) => {
+			item.overtime -= 0.5;
+		});
+		// 去掉前面2项（0和0.25小时不显示）
+		overtimeList.splice(0, 2);
 	}
 
 	// console.log("加班时间预览列表: ", overtimeList);

@@ -19,6 +19,7 @@ function receiveMsg() {
 
 // 全局变量
 let isWeekendCheckBoxChecked; // 是否勾选周末加班
+let isJiucanCountTypeCheckBoxChecked; // 是否勾选就餐类型减半个钟
 
 window.onload = async function () {
 	console.log("popup onload");
@@ -53,6 +54,7 @@ function registerEvent() {
 	$("#goToBtn1").on("click", gotoPage1);
 	$(".to-get-msg").on("click", gotoPage1);
 	$("#weekendCheckBox").on("change", weekendCheckBoxChange);
+	$("#jiucanCountTypeCheckBox").on("change", jiucanCountTypeCheckBoxChange);
 	$(".mealCheckBoxes").on("change", mealCheckBoxChange);
 
 	// 监听选择加班类型
@@ -118,6 +120,18 @@ async function initSettings() {
 		weekendCheckBoxChange();
 	}
 
+	// 设置就餐类型减半个钟复选框（恢复上次的选择，默认不勾选）
+	let settings_jiucanCountTypeCheckBox = await getFromStorageSync(
+		"settings_jiucanCountTypeCheckBox"
+	);
+	if (settings_jiucanCountTypeCheckBox == undefined) {
+		$("#jiucanCountTypeCheckBox").prop("checked", false);
+		jiucanCountTypeCheckBoxChange();
+	} else {
+		$("#jiucanCountTypeCheckBox").prop("checked", settings_jiucanCountTypeCheckBox);
+		jiucanCountTypeCheckBoxChange();
+	}
+
 	// 如果今天有选择过
 	let overTimeCotent = await getFromStorageSync("settings_overTimeCotent");
 	// 历史加班内容
@@ -179,28 +193,31 @@ function gotoPage2() {
  * 周末加班复选框点击事件
  */
 async function weekendCheckBoxChange() {
-	let clockIn = await getFromStorageSync("td_clockIn");
-	let clockOut = await getFromStorageSync("clockOut");
-
 	isWeekendCheckBoxChecked = $("#weekendCheckBox input").prop("checked");
 	saveToStorageSync("settings_isWeekendCheckBoxChecked", isWeekendCheckBoxChecked);
 
+	// 周末加班时就餐类型不可选择
 	if (isWeekendCheckBoxChecked) {
-		// 选中，通知content-script, 今天是周末加班
-		calculateOvertimeList(clockIn, clockOut, true);
-		// 周末加班时就餐类型不可选择
 		$("#overtimeTypeZL").prop("disabled", true);
 		$("#overtimeTypeJC").prop("disabled", true);
+		$("#jiucanCountTypeCheckBox").prop("disabled", true);
 	} else {
-		// 未选中，通知content-script, 今天不是周末加班
-		calculateOvertimeList(clockIn, clockOut, false);
-		// 周末加班时就餐类型不可选择
 		$("#overtimeTypeZL").prop("disabled", false);
 		$("#overtimeTypeJC").prop("disabled", false);
+		$("#jiucanCountTypeCheckBox").prop("disabled", false);
 	}
 
-	// 刷新列表数据
-	getTime();
+	refreshList();
+}
+
+/**
+ * 就餐类型减半个钟复选框点击事件
+ */
+async function jiucanCountTypeCheckBoxChange() {
+	isJiucanCountTypeCheckBoxChecked = $("#jiucanCountTypeCheckBox").prop("checked");
+	saveToStorageSync("settings_jiucanCountTypeCheckBox", isJiucanCountTypeCheckBoxChecked);
+
+	refreshList();
 }
 
 /**
@@ -259,6 +276,24 @@ function checkHasInitPage1() {
 			resolve(true);
 		}
 	});
+}
+
+/**
+ * 刷新列表
+ */
+async function refreshList() {
+	let clockIn = await getFromStorageSync("td_clockIn");
+	let clockOut = await getFromStorageSync("clockOut");
+
+	// 通知content-script, 重新计算加班预览列表
+	calculateOvertimeList(
+		clockIn,
+		clockOut,
+		isWeekendCheckBoxChecked,
+		isJiucanCountTypeCheckBoxChecked
+	);
+	// 刷新列表数据
+	getTime();
 }
 
 /**
