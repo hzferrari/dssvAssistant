@@ -67,7 +67,10 @@ async function insertDom() {
 		}
 
 		setTimeout(() => {
-			$(".select_div_box.xform_Select")[1].value = overtimeTypeVal;
+			// （周末时不填写就餐类型）
+			if (!settings_isWeekendCheckBoxChecked) {
+				$(".select_div_box.xform_Select")[1].value = overtimeTypeVal;
+			}
 			$(`input:radio[title=是否乘坐班车][value=${takeBusVal}]`).click();
 			// 餐饮类型
 			if (settings_mealCheckBox.box1) {

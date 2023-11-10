@@ -82,6 +82,9 @@ function calculateTime(clockIn) {
  * @example clockOut = "17:30"
  */
 function calculateOvertimeList(clockIn, clockOut, isWeekend = false) {
+	if (!clockIn || !clockOut) {
+		return;
+	}
 	// 15分钟为单位
 	let overtimeList = [];
 	// 下班时间与对应加班时长

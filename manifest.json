@@ -3,7 +3,7 @@
 	"author": "ZhenChen",
 	"description": "DS小助手",
 	"manifest_version": 3,
-	"version": "1.3",
+	"version": "1.4",
 	"icons": {
 		"16": "icons/tiger.png",
 		"32": "icons/tiger.png",
