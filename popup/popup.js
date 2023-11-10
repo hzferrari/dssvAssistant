@@ -188,9 +188,15 @@ async function weekendCheckBoxChange() {
 	if (isWeekendCheckBoxChecked) {
 		// 选中，通知content-script, 今天是周末加班
 		calculateOvertimeList(clockIn, clockOut, true);
+		// 周末加班时就餐类型不可选择
+		$("#overtimeTypeZL").prop("disabled", true);
+		$("#overtimeTypeJC").prop("disabled", true);
 	} else {
 		// 未选中，通知content-script, 今天不是周末加班
 		calculateOvertimeList(clockIn, clockOut, false);
+		// 周末加班时就餐类型不可选择
+		$("#overtimeTypeZL").prop("disabled", false);
+		$("#overtimeTypeJC").prop("disabled", false);
 	}
 
 	// 刷新列表数据
