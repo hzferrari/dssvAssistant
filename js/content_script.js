@@ -56,7 +56,6 @@ async function isTodayData() {
 	if (td_date) {
 		const today = formatDate(new Date(), "yyyyMMdd");
 		if (td_date !== today) {
-			console.log("clearData");
 			clearData();
 		}
 	}
