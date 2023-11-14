@@ -50,7 +50,6 @@ function setVersion() {
 
 // 注册事件
 function registerEvent() {
-	console.log("registerEvent1");
 	$("#goToBtn1").on("click", gotoPage1);
 	$(".to-get-msg").on("click", gotoPage1);
 	$("#weekendCheckBox").on("change", weekendCheckBoxChange);
@@ -114,10 +113,12 @@ async function initSettings() {
 	// 周六或周日，自动勾选。（没有考虑节假日调休）
 	if (new Date().getDay() == 6 || new Date().getDay() == 0) {
 		$("#weekendCheckBox input").prop("checked", true);
-		weekendCheckBoxChange();
+		// 首次设置weekendCheckBox时不刷新列表（在下面执行jiucanCountTypeCheckBoxChange时会刷新列表）
+		weekendCheckBoxChange({ donotFresh: true });
 	} else {
 		$("#weekendCheckBox input").prop("checked", false);
-		weekendCheckBoxChange();
+		// 首次设置we
+		weekendCheckBoxChange({ donotFresh: true });
 	}
 
 	// 设置就餐类型减半个钟复选框（恢复上次的选择，默认不勾选）
@@ -192,7 +193,7 @@ function gotoPage2() {
 /**
  * 周末加班复选框点击事件
  */
-async function weekendCheckBoxChange() {
+async function weekendCheckBoxChange(options) {
 	isWeekendCheckBoxChecked = $("#weekendCheckBox input").prop("checked");
 	saveToStorageSync("settings_isWeekendCheckBoxChecked", isWeekendCheckBoxChecked);
 
@@ -207,7 +208,7 @@ async function weekendCheckBoxChange() {
 		$("#jiucanCountTypeCheckBox").prop("disabled", false);
 	}
 
-	refreshList();
+	!options.donotFresh && refreshList();
 }
 
 /**
