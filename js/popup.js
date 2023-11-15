@@ -255,7 +255,10 @@ function checkHasInitPage1() {
 			$("#clearData").show();
 
 			// 不出现滚动条的最大宽度
-			$("body").css("width", "790px");
+			setTimeout(() => {
+				$("body").css("width", "790px");
+				$("html").css("height", "auto");
+			}, 30);
 
 			resolve(true);
 		}
