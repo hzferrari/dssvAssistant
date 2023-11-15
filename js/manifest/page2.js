@@ -1,31 +1,26 @@
-let clockIn;
-let clockOut;
-let overtimeList;
-let selectData;
-
 // 加班申请页 初始化
 async function initPage2() {
 	registerSubmit();
 
 	// 获取数据
-	clockIn = await getFromStorageSync("td_clockIn");
-	clockOut = await getFromStorageSync("clockOut");
-	overtimeList = await getFromStorageSync("overtimeList");
+	let clockIn = await getFromStorageSync("td_clockIn");
+	let clockOut = await getFromStorageSync("clockOut");
+	let overtimeList = await getFromStorageSync("overtimeList");
 
-	selectData = await getFromStorageSync("selectData");
+	let selectData = await getFromStorageSync("selectData");
 
 	if (!clockIn || !clockOut || !overtimeList) {
 		// 无数据
 		return;
 	}
 
-	insertDom();
+	insertDom({ clockIn, clockOut, selectData });
 }
 
 /**
  * 插入内容
  */
-async function insertDom() {
+async function insertDom({ clockIn, clockOut, selectData } = {}) {
 	if (clockIn && clockOut && selectData) {
 		let settings_isWeekendCheckBoxChecked = await getFromStorageSync(
 			"settings_isWeekendCheckBoxChecked"
@@ -97,8 +92,6 @@ async function insertDom() {
  * 监听提交按钮。记录历史加班内容
  */
 function registerSubmit() {
-	console.log("registerSubmit2 ");
-
 	$(".lui-component.lui_widget_btn[title='提交']").on("click", async function () {
 		let overTimeCotentHistory = await getFromStorageSync("overTimeCotentHistory");
 
