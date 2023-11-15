@@ -268,22 +268,33 @@ function checkHasInitPage1() {
 /**
  * 刷新列表
  */
-async function refreshList() {
-	let clockIn = await getFromStorageSync("td_clockIn");
-	let clockOut = await getFromStorageSync("clockOut");
-	let settings_overtimeType = await getFromStorageSync("settings_overtimeType");
+function refreshList() {
+	// 防抖，防止短时间内连续多次渲染
+	debounce(
+		() => {
+			_go();
+		},
+		100,
+		false
+	);
 
-	// 重新计算加班预览列表
-	calculateOvertimeList({
-		clockIn,
-		clockOut,
-		isWeekend: popupGlobal.isWeekendCheckBoxChecked,
-		// 同时勾选时才触发减半个钟计算
-		isJiucanMinus30:
-			settings_overtimeType === "overtimeTypeJC" && popupGlobal.isJiucanCountTypeCheckBoxChecked,
-	});
-	// 刷新列表数据
-	handleOvertimeListEle();
+	async function _go() {
+		let clockIn = await getFromStorageSync("td_clockIn");
+		let clockOut = await getFromStorageSync("clockOut");
+		let settings_overtimeType = await getFromStorageSync("settings_overtimeType");
+
+		// 重新计算加班预览列表
+		calculateOvertimeList({
+			clockIn,
+			clockOut,
+			isWeekend: popupGlobal.isWeekendCheckBoxChecked,
+			// 同时勾选时才触发减半个钟计算
+			isJiucanMinus30:
+				settings_overtimeType === "overtimeTypeJC" && popupGlobal.isJiucanCountTypeCheckBoxChecked,
+		});
+		// 刷新列表数据
+		handleOvertimeListEle();
+	}
 }
 
 /**
